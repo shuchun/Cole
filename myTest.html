@@ -1,0 +1,174 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>油菜的面试题</title>
+<style type="text/css">
+	.bar{
+		display:inline;
+		/*float: left;*/
+		bottom:0px;
+		position: absolute;
+	}
+	#canvas{
+		display:block;
+		position : relative; 
+	}
+	table{
+		width:50%;
+	}
+	td{
+		border:1px solid #1c1c1c;
+	}
+	tr{
+		border:1px solid #1c1c1c;
+	}
+	th{
+		background-color:black;
+		color:white;
+	}
+</style>
+<script type="text/javascript" src="jquery-1.7.2.min.js"></script>
+
+</head>
+
+<body>
+
+<div id="canvas">
+	
+</div>
+<div id="table">
+	<table>
+		<tr id="title">
+			<th>col1</th>
+			<th>col2</th>
+			<th>col3</th>
+			<th>col4</th>
+		</tr>
+		
+	</table>
+	<button onclick="addRow()">Add I rows</button>
+	<button onclick="delRow()">Delete I rows</button>
+</div>
+<script type="text/javascript">
+	/*
+		1.高度按比例
+		2.颜色随机
+		3.底部对其
+		4.宽度随机(50px ~ 150px)
+		5.间隔20px
+	*/
+	//变量声明
+	var data=[100,200,150,300];//数据源
+	const BAR_PADDING=20;//间隔
+	const MIN_BAR_WIDTH=50;//最小bar宽
+	const MAX_BAR_WIDTH=150;//最大bar宽
+
+	var barList=[];
+
+	function initBar(value){
+		var px=barList.length;
+		var py=0;
+		var preColor='';
+		if(px>0){
+			preColor=barList[px-1].color;
+		}
+
+		var color;
+		do{
+			color=randomColor();
+		}while(preColor!=''&&color==preColor);
+
+		var width;
+		do{
+			width=Math.floor(Math.random()*150);
+		}while(width<50);
+
+
+		var bar={
+			x:px,
+			y:py,
+			width:width,
+			height:value,
+			color:color
+
+		}
+
+		barList.push(bar);
+
+	}
+
+	function initCanvas(){
+		var maxHeight=100;
+		for(var i=0;i<data.length;i++){
+			maxHeight=maxHeight>data[i]?maxHeight:data[i];//获取最大高度
+			initBar(data[i]);//初始化bar数组
+
+		}
+
+		var canvas=$('#canvas');
+		canvas.css('height',(maxHeight+50)+'px');
+		var html=initHtml(barList);
+		canvas.html(html);
+
+	}
+
+	function initHtml(list){
+		var html='';
+		var prewidth=0;
+		for(var i=0;i<list.length;i++){
+			var bar=list[i];
+			
+			html+='<div class="bar" style="background-color:'+bar.color+';width:'+bar.width+'px;height:'+bar.height+'px;left:'+prewidth+'px;"> </div>';
+
+			prewidth+=bar.width+20;
+
+		}
+
+		return html;
+	}
+
+	//随机颜色
+	function randomColor(){
+		var color='#';
+		for(var i=0;i<3;i++){
+			color+=Math.floor(Math.random()*255).toString(16);
+		}
+		return color;
+	}
+	$().ready(function(){
+		initCanvas();
+	});
+
+	function addRow(){
+		var context=[];
+		
+		for(var i=0;i<4;i++){
+			var num=Math.floor(Math.random()*100);
+			while(num<20){
+				num=Math.floor(Math.random()*100);
+			}
+			context.push(num);
+		}
+		
+		var title=$('#title');
+		var ntr="<tr><td>"+context[0]+"</td><td>"+context[1]+"</td><td>"+context[2]+"</td><td>"+context[3]+"</td></tr>";
+		var last=title;
+		if(title.nextAll().length>0){
+			last=title.nextAll().last();
+		}
+		last.after(ntr);
+	}
+
+	function delRow(){
+		
+		var title=$('#title');
+		var lastNum=title.nextAll().length;
+		var randomNum=Math.floor(Math.random()*lastNum);
+		var delTr=title.nextAll()[randomNum];
+
+		$(delTr).remove();
+	}
+</script>
+</body>
+</html>
