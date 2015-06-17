@@ -66,6 +66,7 @@
 
 	var barList=[];
 
+	//根据高度值初始化一个bar
 	function initBar(value){
 		var px=barList.length;
 		var py=0;
@@ -77,17 +78,21 @@
 		var color;
 		do{
 			color=randomColor();
-		}while(preColor!=''&&color==preColor);
+
+		//相邻bar的颜色不同，最好不要生成白色。
+		}while(preColor!=''&&(color==preColor || color=='#ffffff');
 
 		var width;
 		do{
-			width=Math.floor(Math.random()*150);
-		}while(width<50);
+			width=Math.floor(Math.random()*MAX_BAR_WIDTH);
 
+		//随机生成一个在最大宽度与最小宽度的宽度值
+		}while(width<MIN_BAR_WIDTH);
 
+		//构建bar对象
 		var bar={
-			x:px,
-			y:py,
+			x:px,//目前没有使用，其实可以将坐标放入。
+			y:py,//目前没用使用，
 			width:width,
 			height:value,
 			color:color
@@ -97,7 +102,7 @@
 		barList.push(bar);
 
 	}
-
+	//初始化图标画布
 	function initCanvas(){
 		var maxHeight=100;
 		for(var i=0;i<data.length;i++){
@@ -106,13 +111,14 @@
 
 		}
 
+		//设置画布高度，初始化bar到画布中
 		var canvas=$('#canvas');
 		canvas.css('height',(maxHeight+50)+'px');
 		var html=initHtml(barList);
 		canvas.html(html);
 
 	}
-
+	//构建插入的html代码
 	function initHtml(list){
 		var html='';
 		var prewidth=0;
@@ -121,7 +127,7 @@
 			
 			html+='<div class="bar" style="background-color:'+bar.color+';width:'+bar.width+'px;height:'+bar.height+'px;left:'+prewidth+'px;"> </div>';
 
-			prewidth+=bar.width+20;
+			prewidth+=bar.width+BAR_PADDING;
 
 		}
 
@@ -132,14 +138,22 @@
 	function randomColor(){
 		var color='#';
 		for(var i=0;i<3;i++){
-			color+=Math.floor(Math.random()*255).toString(16);
+
+			var byteColor=Math.floor(Math.random()*255).toString(16);
+			//解决转换颜色生成位数不够造成无色问题
+			if(byteColor.length==1){
+				byteColor+=byteColor;
+			}
+			color+=byteColor;
 		}
+
 		return color;
 	}
 	$().ready(function(){
 		initCanvas();
 	});
 
+	//添加行
 	function addRow(){
 		var context=[];
 		
@@ -160,6 +174,7 @@
 		last.after(ntr);
 	}
 
+	//删除所有行中的随机一行
 	function delRow(){
 		
 		var title=$('#title');
