@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class Hello{
-	public void main(String[] args){
+	public static void main(String[] args){
 		String demo="<div id='test' class='class div ' style='color:#aaa;width:55px;>hello world</div>";
 	
 		//标签验证
