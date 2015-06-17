@@ -18,7 +18,7 @@ public class RotatArray{
 		}
 	}
 	
-
+	//旋转主方法
 	public static String[][] RotatArray(String[][] data,int num){
 		
 		String newArray[][] = {};
@@ -33,6 +33,7 @@ public class RotatArray{
 					newArray[i][j]= data[j][col-i];
 				}
 			}
+			//递归调用旋转方法直到旋转次数为0
 			newArray = RotatArray(newArray, num-1);
 		}else{
 			return data;
